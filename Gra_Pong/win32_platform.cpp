@@ -1,8 +1,7 @@
-
-
+#include "utils.cpp"
 #include <windows.h>
-
-bool chodzi = true;
+ 
+global_variable bool chodzi = true;
 
 struct stan_renderowania {
 	int wysokosc, szerokosc;
@@ -11,9 +10,11 @@ struct stan_renderowania {
 	BITMAPINFO bitmap_info;
 };
 
-stan_renderowania stan_render;
+global_variable stan_renderowania stan_render;
 
+#include "wspolna_platforma.cpp"
 #include "renderer.cpp"
+#include "gra.cpp"
 
 LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	LRESULT wynik = 0;
@@ -66,20 +67,68 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int  
 	HWND window = CreateWindow(window_class.lpszClassName, L"Gra Pong", WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, 1280, 720, 0, 0, hInstance, 0);
 	HDC hdc = GetDC(window);
 
+	Input input = {};
+
+	float delta_time = 0.016666f;
+	LARGE_INTEGER frame_begin_time;
+	QueryPerformanceCounter(&frame_begin_time);
+
+	float performance_frequency;
+	{
+		LARGE_INTEGER perf;
+		QueryPerformanceFrequency(&perf);
+		performance_frequency = (float)perf.QuadPart;
+	}
+
 	while (chodzi) {
 		//wejscie
 		MSG wiadomosc;
+
+		for (int i = 0; i < BUTTON_COUNT; i++) {
+			input.klawisze[i].zmiana = false;
+		}
+
+
 		while (PeekMessage(&wiadomosc, window, 0, 0, PM_REMOVE)) {
-			TranslateMessage(&wiadomosc);
-			DispatchMessage(&wiadomosc);
+			
+			switch (wiadomosc.message) {
+				case WM_KEYUP:
+				case WM_KEYDOWN: {
+					u32 vk_code = (u32)wiadomosc.wParam;
+					bool w_dole = ((wiadomosc.lParam & (1 << 31)) == 0);
+				
+#define klawisz_w_procesie(b, vk)\
+case vk: {\
+input.klawisze[b].w_dole = w_dole;\
+input.klawisze[b].zmiana = true;\
+} break;
+
+					switch (vk_code) {
+						klawisz_w_procesie(BUTTON_UP, VK_UP);
+						klawisz_w_procesie(BUTTON_DOWN, VK_DOWN);
+						klawisz_w_procesie(BUTTON_LEFT, VK_LEFT);
+						klawisz_w_procesie(BUTTON_RIGHT, VK_RIGHT);
+					}
+				}break;
+
+				default: {
+					TranslateMessage(&wiadomosc);
+					DispatchMessage(&wiadomosc);
+				}
+			}
+
 		}
 
 		//symulacja
-		czysc_ekran(0x0066ff);
-		rysuj_prostokat(50, 50, 200, 500, 0xff0000);
+		symuluj_gre(&input, delta_time);
 
 		//renderowanie
 		StretchDIBits(hdc, 0, 0, stan_render.szerokosc, stan_render.wysokosc, 0, 0, stan_render.szerokosc, stan_render.wysokosc, stan_render.pamiec, &stan_render.bitmap_info, DIB_RGB_COLORS, SRCCOPY);
+	
+		LARGE_INTEGER frame_end_time;
+		QueryPerformanceCounter(&frame_end_time);
+		delta_time = (float)(frame_end_time.QuadPart - frame_begin_time.QuadPart) / performance_frequency;
+		frame_begin_time = frame_end_time;
 	}
 	
 }
