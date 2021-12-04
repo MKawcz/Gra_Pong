@@ -6,8 +6,8 @@ struct Stan_Klawisza {
 enum {
 	BUTTON_UP,
 	BUTTON_DOWN,
-	BUTTON_LEFT,
-	BUTTON_RIGHT,
+	BUTTON_W,
+	BUTTON_S,
 
 	BUTTON_COUNT, //powinien byæ ostatnim elementem
 };

@@ -99,15 +99,15 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int  
 				
 #define klawisz_w_procesie(b, vk)\
 case vk: {\
+input.klawisze[b].zmiana = w_dole != input.klawisze[b].w_dole;\
 input.klawisze[b].w_dole = w_dole;\
-input.klawisze[b].zmiana = true;\
 } break;
 
 					switch (vk_code) {
 						klawisz_w_procesie(BUTTON_UP, VK_UP);
 						klawisz_w_procesie(BUTTON_DOWN, VK_DOWN);
-						klawisz_w_procesie(BUTTON_LEFT, VK_LEFT);
-						klawisz_w_procesie(BUTTON_RIGHT, VK_RIGHT);
+						klawisz_w_procesie(BUTTON_W, 'W');
+						klawisz_w_procesie(BUTTON_S, 'S');
 					}
 				}break;
 
