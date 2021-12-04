@@ -58,3 +58,96 @@ rysuj_prostokat(float x, float y, float polowa_rozmiaru_x, float polowa_rozmiaru
 
 	rysuj_prostokat_w_pikselach(x0, y0, x1, y1, color);
 }
+
+internal void
+rysuj_liczby(int liczba, float x, float y, float rozmiar, u32 color) {
+	float polowa_rozmiaru = rozmiar * .5f;
+	
+	bool rysuj_liczby = false;
+	while (liczba || !rysuj_liczby) {
+		rysuj_liczby = true;
+		int cyfra = liczba % 10;
+		liczba = liczba / 10;
+
+		switch (cyfra) {
+		case 0: {
+			rysuj_prostokat(x - rozmiar, y, polowa_rozmiaru, 2.5f * rozmiar, color);
+			rysuj_prostokat(x + rozmiar, y, polowa_rozmiaru, 2.5f * rozmiar, color);
+			rysuj_prostokat(x, y + rozmiar * 2.f, polowa_rozmiaru, polowa_rozmiaru, color);
+			rysuj_prostokat(x, y - rozmiar * 2.f, polowa_rozmiaru, polowa_rozmiaru, color);
+			x -= rozmiar * 4.f;
+		}break;
+
+		case 1: {
+			rysuj_prostokat(x + rozmiar, y, polowa_rozmiaru, 2.5f * rozmiar, color);
+			x -= rozmiar * 2.f;
+		} break;
+
+		case 2: {
+			rysuj_prostokat(x, y + rozmiar * 2.f, 1.5f * rozmiar, polowa_rozmiaru, color);
+			rysuj_prostokat(x, y, 1.5f * rozmiar, polowa_rozmiaru, color);
+			rysuj_prostokat(x, y - rozmiar * 2.f, 1.5f * rozmiar, polowa_rozmiaru, color);
+			rysuj_prostokat(x + rozmiar, y + rozmiar, polowa_rozmiaru, polowa_rozmiaru, color);
+			rysuj_prostokat(x - rozmiar, y - rozmiar, polowa_rozmiaru, polowa_rozmiaru, color);
+			x -= rozmiar * 4.f;
+		} break;
+
+		case 3: {
+			rysuj_prostokat(x - polowa_rozmiaru, y + rozmiar * 2.f, rozmiar, polowa_rozmiaru, color);
+			rysuj_prostokat(x - polowa_rozmiaru, y, rozmiar, polowa_rozmiaru, color);
+			rysuj_prostokat(x - polowa_rozmiaru, y - rozmiar * 2.f, rozmiar, polowa_rozmiaru, color);
+			rysuj_prostokat(x + rozmiar, y, polowa_rozmiaru, 2.5f * rozmiar, color);
+			x -= rozmiar * 4.f;
+		} break;
+
+		case 4: {
+			rysuj_prostokat(x + rozmiar, y, polowa_rozmiaru, 2.5f * rozmiar, color);
+			rysuj_prostokat(x - rozmiar, y + rozmiar, polowa_rozmiaru, 1.5f * rozmiar, color);
+			rysuj_prostokat(x, y, polowa_rozmiaru, polowa_rozmiaru, color);
+			x -= rozmiar * 4.f;
+		} break;
+
+		case 5: {
+			rysuj_prostokat(x, y + rozmiar * 2.f, 1.5f * rozmiar, polowa_rozmiaru, color);
+			rysuj_prostokat(x, y, 1.5f * rozmiar, polowa_rozmiaru, color);
+			rysuj_prostokat(x, y - rozmiar * 2.f, 1.5f * rozmiar, polowa_rozmiaru, color);
+			rysuj_prostokat(x - rozmiar, y + rozmiar, polowa_rozmiaru, polowa_rozmiaru, color);
+			rysuj_prostokat(x + rozmiar, y - rozmiar, polowa_rozmiaru, polowa_rozmiaru, color);
+			x -= rozmiar * 4.f;
+		} break;
+
+		case 6: {
+			rysuj_prostokat(x + polowa_rozmiaru, y + rozmiar * 2.f, rozmiar, polowa_rozmiaru, color);
+			rysuj_prostokat(x + polowa_rozmiaru, y, rozmiar, polowa_rozmiaru, color);
+			rysuj_prostokat(x + polowa_rozmiaru, y - rozmiar * 2.f, rozmiar, polowa_rozmiaru, color);
+			rysuj_prostokat(x - rozmiar, y, polowa_rozmiaru, 2.5f * rozmiar, color);
+			rysuj_prostokat(x + rozmiar, y - rozmiar, polowa_rozmiaru, polowa_rozmiaru, color);
+			x -= rozmiar * 4.f;
+		} break;
+
+		case 7: {
+			rysuj_prostokat(x + rozmiar, y, polowa_rozmiaru, 2.5f * rozmiar, color);
+			rysuj_prostokat(x - polowa_rozmiaru, y + rozmiar * 2.f, rozmiar, polowa_rozmiaru, color);
+			x -= rozmiar * 4.f;
+		} break;
+
+		case 8: {
+			rysuj_prostokat(x - rozmiar, y, polowa_rozmiaru, 2.5f * rozmiar, color);
+			rysuj_prostokat(x + rozmiar, y, polowa_rozmiaru, 2.5f * rozmiar, color);
+			rysuj_prostokat(x, y + rozmiar * 2.f, polowa_rozmiaru, polowa_rozmiaru, color);
+			rysuj_prostokat(x, y - rozmiar * 2.f, polowa_rozmiaru, polowa_rozmiaru, color);
+			rysuj_prostokat(x, y, polowa_rozmiaru, polowa_rozmiaru, color);
+			x -= rozmiar * 4.f;
+		} break;
+
+		case 9: {
+			rysuj_prostokat(x - polowa_rozmiaru, y + rozmiar * 2.f, rozmiar, polowa_rozmiaru, color);
+			rysuj_prostokat(x - polowa_rozmiaru, y, rozmiar, polowa_rozmiaru, color);
+			rysuj_prostokat(x - polowa_rozmiaru, y - rozmiar * 2.f, rozmiar, polowa_rozmiaru, color);
+			rysuj_prostokat(x + rozmiar, y, polowa_rozmiaru, 2.5f * rozmiar, color);
+			rysuj_prostokat(x - rozmiar, y + rozmiar, polowa_rozmiaru, polowa_rozmiaru, color);
+			x -= rozmiar * 4.f;
+		} break;
+		}
+	}
+}

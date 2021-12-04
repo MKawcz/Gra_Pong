@@ -5,7 +5,9 @@
 float pozycja_1_gracza, dpozycja_1_gracza, pozycja_2_gracza, dpozycja_2_gracza;
 float polowa_rozmiaru_areny_x = 85, polowa_rozmiaru_areny_y = 45;
 float polowa_rozmiaru_gracza_x = 2.5, polowa_rozmiaru_gracza_y = 12;
-float pozycja_pilki_x, pozycja_pilki_y, dpozycja_pilki_x = 100, dpozycja_pilki_y, polowa_rozmiaru_pilki = 1;
+float pozycja_pilki_x, pozycja_pilki_y, dpozycja_pilki_x = 130, dpozycja_pilki_y, polowa_rozmiaru_pilki = 1;
+
+int punkt_gracza_1, punkt_gracza_2;
 
 internal bool
 aabb_vs_aabb(float p1x, float p1y, float hs1x, float hs1y,
@@ -39,8 +41,16 @@ symuluj_gre(Input* input, float dt) {
 	rysuj_prostokat(0, 0, polowa_rozmiaru_areny_x, polowa_rozmiaru_areny_y, 0xffaa33);
 
 	float ddpozycja_1_gracza = 0.f; 
-	if (w_dole(BUTTON_UP)) ddpozycja_1_gracza += 2000;
-	if (w_dole(BUTTON_DOWN)) ddpozycja_1_gracza -= 2000;
+#if 0	
+	if (w_dole(BUTTON_UP)) ddpozycja_1_gracza += 1300;
+	if (w_dole(BUTTON_DOWN)) ddpozycja_1_gracza -= 1300;
+#else
+	//if (pozycja_pilki_y > pozycja_1_gracza+2.f) ddpozycja_1_gracza += 2000;
+	//if (pozycja_pilki_y < pozycja_1_gracza-2.f) ddpozycja_1_gracza -= 2000;
+	ddpozycja_1_gracza = (pozycja_pilki_y - pozycja_1_gracza) * 100;
+	if (ddpozycja_1_gracza > 1300) ddpozycja_1_gracza = 1300;
+	if (ddpozycja_1_gracza < -1300) ddpozycja_1_gracza = -1300;
+#endif
 
 	float ddpozycja_2_gracza = 0.f;
 	if (w_dole(BUTTON_W)) ddpozycja_2_gracza += 2000;
@@ -80,14 +90,20 @@ symuluj_gre(Input* input, float dt) {
 			dpozycja_pilki_y = 0;
 			pozycja_pilki_x = 0;
 			pozycja_pilki_y = 0;
+			punkt_gracza_1++;
 		}
 		else if (pozycja_pilki_x - polowa_rozmiaru_pilki < -polowa_rozmiaru_areny_x) {
 			dpozycja_pilki_x *= -1;
 			dpozycja_pilki_y = 0;
 			pozycja_pilki_x = 0;
 			pozycja_pilki_y = 0;
+			punkt_gracza_2++;
 		}
 	}
+
+	rysuj_liczby(punkt_gracza_1, -10, 40, 1.f, 0xbbffbb);
+	rysuj_liczby(punkt_gracza_2, 10, 40, 1.f, 0xbbffbb);
+
 
 	//renderowanie
 	rysuj_prostokat(pozycja_pilki_x,pozycja_pilki_y, polowa_rozmiaru_pilki, polowa_rozmiaru_pilki, 0xffffff);
