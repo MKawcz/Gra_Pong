@@ -36,15 +36,31 @@ rysuj_prostokat_w_pikselach(int x0, int y0, int x1, int y1, u32 color) {
 	}
 }
 
-global_variable float renderowanie_skali = 0.01f;
+global_variable float skala_renderowania = 0.01f;
+
+internal void
+rysuj_obramowanie_areny(float arena_x, float arena_y, u32 color) {
+	arena_x *= stan_render.wysokosc * skala_renderowania;
+	arena_y *= stan_render.wysokosc * skala_renderowania;
+
+	int x0 = (int)((float)stan_render.szerokosc * .5f - arena_x);
+	int x1 = (int)((float)stan_render.szerokosc * .5f + arena_x);
+	int y0 = (int)((float)stan_render.wysokosc * .5f - arena_y);
+	int y1 = (int)((float)stan_render.wysokosc * .5f + arena_y);
+
+	rysuj_prostokat_w_pikselach(0, 0, stan_render.szerokosc, y0, color);
+	rysuj_prostokat_w_pikselach(0, y1, x1, stan_render.wysokosc, color);
+	rysuj_prostokat_w_pikselach(0, y0, x0, y1, color);
+	rysuj_prostokat_w_pikselach(x1, y0, stan_render.szerokosc, stan_render.wysokosc, color);
+}
 
 internal void
 rysuj_prostokat(float x, float y, float polowa_rozmiaru_x, float polowa_rozmiaru_y, u32 color) {
 	
-	x *= stan_render.wysokosc*renderowanie_skali;
-	y *= stan_render.wysokosc*renderowanie_skali;
-	polowa_rozmiaru_x *= stan_render.wysokosc*renderowanie_skali;
-	polowa_rozmiaru_y *= stan_render.wysokosc*renderowanie_skali;
+	x *= stan_render.wysokosc*skala_renderowania;
+	y *= stan_render.wysokosc*skala_renderowania;
+	polowa_rozmiaru_x *= stan_render.wysokosc*skala_renderowania;
+	polowa_rozmiaru_y *= stan_render.wysokosc*skala_renderowania;
 	
 	x += stan_render.szerokosc / 2.f;
 	y += stan_render.wysokosc / 2.f;
@@ -57,6 +73,264 @@ rysuj_prostokat(float x, float y, float polowa_rozmiaru_x, float polowa_rozmiaru
 
 
 	rysuj_prostokat_w_pikselach(x0, y0, x1, y1, color);
+}
+
+const char* litery[][7] = {
+" 00",
+"0  0",
+"0  0",
+"0000",
+"0  0",
+"0  0",
+"0  0",
+
+	"000",
+	"0  0",
+	"0  0",
+	"000",
+	"0  0",
+	"0  0",
+	"000",
+
+	" 000",
+	"0",
+	"0",
+	"0",
+	"0",
+	"0",
+	" 000",
+
+	"000",
+	"0  0",
+	"0  0",
+	"0  0",
+	"0  0",
+	"0  0",
+	"000",
+
+	"0000",
+	"0",
+	"0",
+	"000",
+	"0",
+	"0",
+	"0000",
+
+	"0000",
+	"0",
+	"0",
+	"000",
+	"0",
+	"0",
+	"0",
+
+	" 000",
+	"0",
+	"0",
+	"0 00",
+	"0  0",
+	"0  0",
+	" 000",
+
+	"0  0",
+	"0  0",
+	"0  0",
+	"0000",
+	"0  0",
+	"0  0",
+	"0  0",
+
+	"000",
+	" 0",
+	" 0",
+	" 0",
+	" 0",
+	" 0",
+	"000",
+
+	" 000",
+	"   0",
+	"   0",
+	"   0",
+	"0  0",
+	"0  0",
+	" 000",
+
+	"0  0",
+	"0  0",
+	"0 0",
+	"00",
+	"0 0",
+	"0  0",
+	"0  0",
+
+	"0",
+	"0",
+	"0",
+	"0",
+	"0",
+	"0",
+	"0000",
+
+	"00 00",
+	"0 0 0",
+	"0 0 0",
+	"0   0",
+	"0   0",
+	"0   0",
+	"0   0",
+
+	"00  0",
+	"0 0 0",
+	"0 0 0",
+	"0 0 0",
+	"0 0 0",
+	"0 0 0",
+	"0  00",
+
+	"0000",
+	"0  0",
+	"0  0",
+	"0  0",
+	"0  0",
+	"0  0",
+	"0000",
+
+	" 000",
+	"0  0",
+	"0  0",
+	"000",
+	"0",
+	"0",
+	"0",
+
+	" 000 ",
+	"0   0",
+	"0   0",
+	"0   0",
+	"0 0 0",
+	"0  0 ",
+	" 00 0",
+
+	"000",
+	"0  0",
+	"0  0",
+	"000",
+	"0  0",
+	"0  0",
+	"0  0",
+
+	" 000",
+	"0",
+	"0 ",
+	" 00",
+	"   0",
+	"   0",
+	"000 ",
+
+	"000",
+	" 0",
+	" 0",
+	" 0",
+	" 0",
+	" 0",
+	" 0",
+
+	"0  0",
+	"0  0",
+	"0  0",
+	"0  0",
+	"0  0",
+	"0  0",
+	" 00",
+
+	"0   0",
+	"0   0",
+	"0   0",
+	"0   0",
+	"0   0",
+	" 0 0",
+	"  0",
+
+	"0   0 ",
+	"0   0",
+	"0   0",
+	"0 0 0",
+	"0 0 0",
+	"0 0 0",
+	" 0 0 ",
+
+	"0   0",
+	"0   0",
+	" 0 0",
+	"  0",
+	" 0 0",
+	"0   0",
+	"0   0",
+
+	"0   0",
+	"0   0",
+	" 0 0",
+	"  0",
+	"  0",
+	"  0",
+	"  0",
+
+	"0000",
+	"   0",
+	"  0",
+	" 0",
+	"0",
+	"0",
+	"0000",
+
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"0",
+
+	"   0",
+	"  0",
+	"  0",
+	" 0",
+	" 0",
+	"0",
+	"0",
+};
+
+internal void
+rysuj_tekst(const char *tekst, float x, float y, float rozmiar, u32 color) {
+	float polowa_rozmiaru = rozmiar * .5f;
+	float oryginalny_y = y;
+
+	while (*tekst) {
+		if (*tekst != 32) {
+			const char** litera;
+			if (*tekst == 47) litera = litery[27];
+			else if (*tekst == 46) litera = litery[26]; 
+			else litera = litery[*tekst - 'A'];
+			float oryginalny_x = x;
+
+			for (int i = 0; i < 7; i++) {
+				const char* wiersz = litera[i];
+				while (*wiersz) {
+					if (*wiersz == '0') {
+						rysuj_prostokat(x, y, polowa_rozmiaru, polowa_rozmiaru, color);
+					}
+					x += rozmiar;
+					wiersz++;
+				}
+				y -= rozmiar;
+				x = oryginalny_x;
+			}
+		}
+		tekst++;
+		x += rozmiar * 6.f;
+		y = oryginalny_y;
+	}
 }
 
 internal void

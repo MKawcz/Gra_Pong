@@ -55,6 +55,10 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int  nShowCmd) {   //'punkt wejscia' dla graficznych aplikacji okienkowych systemu Windows
+
+	ShowCursor(FALSE);
+
+
 	//Stworzenie Klasy Okna
 	WNDCLASS window_class = {};
 	window_class.style = CS_HREDRAW | CS_VREDRAW;		// rysowanie okna poziomo i pionowo
@@ -65,6 +69,15 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int  
 
 	//Stworzenie Okna
 	HWND window = CreateWindow(window_class.lpszClassName, L"Gra Pong", WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, 1280, 720, 0, 0, hInstance, 0);
+	{
+		//Pelny ekran
+		SetWindowLong(window, GWL_STYLE, GetWindowLong(window, GWL_STYLE) & ~WS_OVERLAPPEDWINDOW);
+		MONITORINFO mi = { sizeof(mi) };
+		GetMonitorInfo(MonitorFromWindow(window, MONITOR_DEFAULTTOPRIMARY), &mi);
+		SetWindowPos(window, HWND_TOP, mi.rcMonitor.left, mi.rcMonitor.top, mi.rcMonitor.right - mi.rcMonitor.left, mi.rcMonitor.bottom - mi.rcMonitor.top, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+	}
+	
+	
 	HDC hdc = GetDC(window);
 
 	Input input = {};
@@ -108,6 +121,10 @@ input.klawisze[b].w_dole = w_dole;\
 						klawisz_w_procesie(BUTTON_DOWN, VK_DOWN);
 						klawisz_w_procesie(BUTTON_W, 'W');
 						klawisz_w_procesie(BUTTON_S, 'S');
+						klawisz_w_procesie(BUTTON_LEFT, VK_LEFT);
+						klawisz_w_procesie(BUTTON_RIGHT, VK_RIGHT);
+						klawisz_w_procesie(BUTTON_ENTER, VK_RETURN);
+
 					}
 				}break;
 
