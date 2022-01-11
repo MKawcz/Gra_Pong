@@ -11,6 +11,7 @@ enum {
 	BUTTON_LEFT,
 	BUTTON_RIGHT,
 	BUTTON_ENTER,
+	BUTTON_ESC,
 
 	BUTTON_COUNT, //powinien byæ ostatnim elementem
 };

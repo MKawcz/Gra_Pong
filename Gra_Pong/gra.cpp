@@ -2,6 +2,7 @@
 #define wcisniety(b) (input->klawisze[b].w_dole && input->klawisze[b].zmiana)
 #define puszczony(b) (!input->klawisze[b].w_dole && input->klawisze[b].zmiana)
 
+
 float pozycja_1_gracza, dpozycja_1_gracza, pozycja_2_gracza, dpozycja_2_gracza;
 float polowa_rozmiaru_areny_x = 85, polowa_rozmiaru_areny_y = 45;
 float polowa_rozmiaru_gracza_x = 2.5, polowa_rozmiaru_gracza_y = 12;
@@ -21,6 +22,8 @@ aabb_vs_aabb(float p1x, float p1y, float hs1x, float hs1y,
 enum Tryb_Gry {
 	GM_MENU,
 	GM_GAMEPLAY,
+	GM_END,
+	GM_PAUSE,
 };
 
 Tryb_Gry obecny_tryb;
@@ -116,6 +119,14 @@ symuluj_gre(Input* input, float dt) {
 		rysuj_liczby(punkt_gracza_1, -10, 40, 1.f, 0xbbffbb);
 		rysuj_liczby(punkt_gracza_2, 10, 40, 1.f, 0xbbffbb);
 
+		if (punkt_gracza_1 == 10 || punkt_gracza_2 == 10)
+		{
+			obecny_tryb = GM_END;	
+		}
+
+		if (wcisniety(BUTTON_ESC)) {
+			obecny_tryb = GM_PAUSE;
+		}
 
 		//renderowanie
 		rysuj_prostokat(pozycja_pilki_x, pozycja_pilki_y, polowa_rozmiaru_pilki, polowa_rozmiaru_pilki, 0xffffff);
@@ -124,27 +135,148 @@ symuluj_gre(Input* input, float dt) {
 		rysuj_prostokat(80, pozycja_1_gracza, polowa_rozmiaru_gracza_x, polowa_rozmiaru_gracza_y, 0xff0000);
 		rysuj_prostokat(-80, pozycja_2_gracza, polowa_rozmiaru_gracza_x, polowa_rozmiaru_gracza_y, 0xff0000);
 
-	} else {
+	} else if (obecny_tryb == GM_PAUSE) {
+
+
 		if (wcisniety(BUTTON_LEFT) || wcisniety(BUTTON_RIGHT)) {
 			hot_button = !hot_button;
 		}
 
-
 		if (wcisniety(BUTTON_ENTER)) {
-			obecny_tryb = GM_GAMEPLAY;
-			przeciwnik_komputer = hot_button ? 0 : 1;
+			if (hot_button == 0) {
+				obecny_tryb = GM_GAMEPLAY;
+			}
+			else {
+				obecny_tryb = GM_MENU;
+
+				punkt_gracza_1 = 0;
+				punkt_gracza_2 = 0;
+
+				pozycja_1_gracza = 0.f;
+				dpozycja_1_gracza = 0.f;
+				pozycja_2_gracza = 0.f;
+				dpozycja_2_gracza = 0.f;
+
+				
+				pozycja_pilki_x = 0;
+				pozycja_pilki_y = 0;
+				dpozycja_pilki_x = 130;
+				dpozycja_pilki_y = 0;
+				
+			}
+		}
+
+		if (hot_button == 0) {
+
+			rysuj_tekst("RESUME", -65, -10, 1, 0xff0000);
+			rysuj_tekst("EXIT TO MENU", 10, -10, 1, 0xaaaaaa);
+		}
+		else {
+
+			rysuj_tekst("RESUME", -65, -10, 1, 0xaaaaaa);
+			rysuj_tekst("EXIT TO MENU", 10, -10, 1, 0xff0000);
+		}
+		rysuj_tekst("PAUSE", -30, 30, 2, 0xfffffff);
+
+	} else if (obecny_tryb == GM_END) {
+		
+
+		if (wcisniety(BUTTON_LEFT) || wcisniety(BUTTON_RIGHT)) {
+			hot_button = !hot_button;
+		}
+		
+		if (wcisniety(BUTTON_ENTER)) {
+			if (hot_button == 0) {
+				obecny_tryb = GM_GAMEPLAY;
+			}
+			else {
+				obecny_tryb = GM_MENU;
+			}
+
+			punkt_gracza_1 = 0;
+			punkt_gracza_2 = 0;
+
+			pozycja_1_gracza = 0.f;
+			dpozycja_1_gracza = 0.f;
+			pozycja_2_gracza = 0.f;
+			dpozycja_2_gracza = 0.f;
+
+			
+		}
+		
+		if (hot_button == 0) {
+
+			rysuj_tekst("PLAY AGAIN", -80, -10, 1, 0xff0000);
+			rysuj_tekst("EXIT TO MENU", 10, -10, 1, 0xaaaaaa);
+		}
+		else {
+
+			rysuj_tekst("PLAY AGAIN", -80, -10, 1, 0xaaaaaa);
+			rysuj_tekst("EXIT TO MENU", 10, -10, 1, 0xff0000);
+		}
+		
+		if (punkt_gracza_1 == 10) {
+			rysuj_tekst("PLAYER ONE WON", -63, 30, 1.5, 0xffffff);
+		}
+		else if (punkt_gracza_2 == 10) {
+			rysuj_tekst("PLAYER TWO WON", -63, 30, 1.5, 0xffffff);
+
+		}
+
+	} else {
+		/*if (wcisniety(BUTTON_LEFT) || wcisniety(BUTTON_RIGHT)) {
+			hot_button = !hot_button;
+		}*/
+	
+		if (wcisniety(BUTTON_RIGHT)) {
+			hot_button++;
+			if (hot_button > 2)
+			{
+				hot_button = 0;
+			}
+		}
+		else if (wcisniety(BUTTON_LEFT)) {
+			hot_button--;
+			if (hot_button < 0)
+			{
+				hot_button = 2;
+			}
+		}
+
+		
+		if (wcisniety(BUTTON_ENTER)) {
+			//obecny_tryb = GM_GAMEPLAY;
+			//przeciwnik_komputer = hot_button ? 0 : 1;
+			if (hot_button == 0) {
+				obecny_tryb = GM_GAMEPLAY;
+				przeciwnik_komputer = 1;
+			}
+			else if (hot_button == 1) {
+				obecny_tryb = GM_GAMEPLAY;
+				przeciwnik_komputer = 0;
+			}
+			else if (hot_button == 2) {
+				
+			}
 		}
 
 		if (hot_button == 0) {
 			rysuj_tekst("SINGLE PLAYER", -80, -10, 1, 0xff0000);
 			rysuj_tekst("MULTIPLAYER", 20, -10, 1, 0xaaaaaa);
+			rysuj_tekst("EXIT PONG", -30, -30, 1, 0xaaaaaa);
+		}
+		else if (hot_button == 1) {
+			rysuj_tekst("SINGLE PLAYER", -80, -10, 1, 0xaaaaaa);
+			rysuj_tekst("MULTIPLAYER", 20, -10, 1, 0xff0000);
+			rysuj_tekst("EXIT PONG", -30, -30, 1, 0xaaaaaa); 
 		}
 		else {
 			rysuj_tekst("SINGLE PLAYER", -80, -10, 1, 0xaaaaaa);
-			rysuj_tekst("MULTIPLAYER", 20, -10, 1, 0xff0000);
+			rysuj_tekst("MULTIPLAYER", 20, -10, 1, 0xaaaaaa);
+			rysuj_tekst("EXIT PONG", -30, -30, 1, 0xff0000);
 		}
 
-		rysuj_tekst("PONG GAME", -45, 30, 2, 0xfffffff);
+		rysuj_tekst("PONG GAME", -50, 30, 2, 0xfffffff);
 
 	}
 }
