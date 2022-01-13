@@ -3,7 +3,10 @@ struct Stan_Klawisza {
 	bool zmiana;
 };
 
-enum {
+//Enum to rodzaj danych, który zawiera ju¿ listê wartoœci, jak¹ mo¿na nadaæ zmiennej w³asnego typu enum.
+
+// lista mo¿liwych przycisków do wciœniêcia: 
+enum {				
 	BUTTON_UP,
 	BUTTON_DOWN,
 	BUTTON_W,
@@ -12,7 +15,8 @@ enum {
 	BUTTON_RIGHT,
 	BUTTON_ENTER,
 	BUTTON_ESC,
-
+	
+	//licznik przyciskow:
 	BUTTON_COUNT, //powinien byæ ostatnim elementem
 };
 
