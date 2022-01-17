@@ -31,7 +31,7 @@ int hot_button;
 bool przeciwnik_komputer;
 
 internal void
-symuluj_gracza(float *p, float *dp, float ddp, float dt) {
+symuluj_gracza(float* p, float* dp, float ddp, float dt) {
 	ddp -= *dp * 10.f;			// zapobiega przed "lataniem" obiektu, sprawia, ¿e ruch koñczy siê w bardziej kontrolowany sposób
 
 	*p = *p + *dp * dt + ddp * dt * dt * .5f;			// ustalamy pozycjê na podstawie pochodnej od pozycji (dp, prêdkoœæ) i pochodnej od pochodnej (ddp, przyspieszenie)
@@ -39,7 +39,7 @@ symuluj_gracza(float *p, float *dp, float ddp, float dt) {
 
 	if (*p + polowa_rozmiaru_gracza_y > polowa_rozmiaru_areny_y) {			// obs³uga kolizji gracza ze œcian¹
 		*p = polowa_rozmiaru_areny_y - polowa_rozmiaru_gracza_y;			// zatrzymujemy gracza
-		*dp = 0;															// musimy te¿ wyzrowaæ prêdkoœæ, poniewa¿ zatrzymaliœmy gracza
+		*dp = 0;															// musimy te¿ wyzerowaæ prêdkoœæ, poniewa¿ zatrzymaliœmy gracza
 	}
 	else if (*p - polowa_rozmiaru_gracza_y < -polowa_rozmiaru_areny_y) {
 		*p = -polowa_rozmiaru_areny_y + polowa_rozmiaru_gracza_y;
@@ -59,12 +59,12 @@ symuluj_gre(Input* input, float dt) {
 			if (w_dole(BUTTON_UP)) ddpozycja_1_gracza += 1300;			// ustalamy odpowiednie przyspieszenie dla obiektu gracza 1
 			if (w_dole(BUTTON_DOWN)) ddpozycja_1_gracza -= 1300;		// tak jak d³ugo przycisk jest wciœniêty, tak d³ugo obiekt gracza 1 bêdzie siê porusza³
 		}
-		else {																		//tryb singleplayer
+		else {																		// tryb singleplayer
 			ddpozycja_1_gracza = (pozycja_pilki_y - pozycja_1_gracza) * 100;		// ustalamy przyspieszenie dla AI, który nie bedzie przyspiesza³ do maksymalnej prêdkoœci, gdy pi³ka bêdzie blisko, dziêki temu unikniemy "trzêsienia siê" AI
 			if (ddpozycja_1_gracza > 1300) ddpozycja_1_gracza = 1300;				// ustalamy limity prêdkoœci AI, dziêki czemu bêdzie mo¿liwe do pokonania			
 			if (ddpozycja_1_gracza < -1300) ddpozycja_1_gracza = -1300;
 		}
-															// ustalamy odpowiednie przyspieszenie dla obiektu gracza 2, który bêdzie zale¿ny od u¿ytkownika w obu trybach
+		// ustalamy odpowiednie przyspieszenie dla obiektu gracza 2, który bêdzie zale¿ny od u¿ytkownika w obu trybach
 		float ddpozycja_2_gracza = 0.f;						// pochodna od pochodnej pozycji gracza, która odpowiada za przyspieszenie
 		if (w_dole(BUTTON_W)) ddpozycja_2_gracza += 2000;	// je¿eli przycisk jest wciœniêty obiekt bêdzie zwiêksza³ przyspieszenie
 		if (w_dole(BUTTON_S)) ddpozycja_2_gracza -= 2000;
@@ -106,7 +106,7 @@ symuluj_gre(Input* input, float dt) {
 				dpozycja_pilki_y = 0;
 				pozycja_pilki_x = 0;
 				pozycja_pilki_y = 0;
-				punkt_gracza_1++;
+				punkt_gracza_1++;			// dodajemy punkt graczowi
 			}
 			else if (pozycja_pilki_x - polowa_rozmiaru_pilki < -polowa_rozmiaru_areny_x) {
 				dpozycja_pilki_x *= -1;
@@ -123,7 +123,7 @@ symuluj_gre(Input* input, float dt) {
 		// po zdobyciu 10 pkt przez jednego z graczy, przenosimy siê do ekranu koñca rozgrywki:
 		if (punkt_gracza_1 == 10 || punkt_gracza_2 == 10)
 		{
-			obecny_tryb = GM_END;	
+			obecny_tryb = GM_END;
 		}
 		// jeœli gracz wciœnie przycisk ESC, przenosimy siê do ekranu pauzy 
 		if (wcisniety(BUTTON_ESC)) {
@@ -137,9 +137,10 @@ symuluj_gre(Input* input, float dt) {
 		rysuj_prostokat(80, pozycja_1_gracza, polowa_rozmiaru_gracza_x, polowa_rozmiaru_gracza_y, 0xff0000);
 		rysuj_prostokat(-80, pozycja_2_gracza, polowa_rozmiaru_gracza_x, polowa_rozmiaru_gracza_y, 0xff0000);
 
-	} else if (obecny_tryb == GM_PAUSE) {				// EKRAN PAUZY:
+	}
+	else if (obecny_tryb == GM_PAUSE) {				// EKRAN PAUZY:
 
-		// umo¿liwiamy wybór przycisku za pomoc¹ strza³ek, zmieniaj¹c wartoœæ "hot_button":
+	 // umo¿liwiamy wybór przycisku za pomoc¹ strza³ek, zmieniaj¹c wartoœæ "hot_button":
 		if (wcisniety(BUTTON_LEFT) || wcisniety(BUTTON_RIGHT)) {
 			hot_button = !hot_button;
 		}
@@ -161,12 +162,12 @@ symuluj_gre(Input* input, float dt) {
 				pozycja_2_gracza = 0.f;
 				dpozycja_2_gracza = 0.f;
 
-				
+
 				pozycja_pilki_x = 0;
 				pozycja_pilki_y = 0;
 				dpozycja_pilki_x = 130;
 				dpozycja_pilki_y = 0;
-				
+
 			}
 		}
 		// zmieniamy kolor przycisków w zale¿noœci od tego, który wybraliœmy:
@@ -183,13 +184,14 @@ symuluj_gre(Input* input, float dt) {
 		// tytu³ ekranu:
 		rysuj_tekst("PAUSE", -30, 30, 2, 0xfffffff);
 
-	} else if (obecny_tryb == GM_END) {				// EKRAN KOÑCA ROZGRYWKI:
-		
-		// umo¿liwiamy wybór przycisku za pomoc¹ strza³ek, zmieniaj¹c wartoœæ "hot_button":
+	}
+	else if (obecny_tryb == GM_END) {				// EKRAN KOÑCA ROZGRYWKI:
+
+	 // umo¿liwiamy wybór przycisku za pomoc¹ strza³ek, zmieniaj¹c wartoœæ "hot_button":
 		if (wcisniety(BUTTON_LEFT) || wcisniety(BUTTON_RIGHT)) {
 			hot_button = !hot_button;
 		}
-		
+
 		// w zale¿noœci od wybranego przycisku, po naciœniêciu enter u¿ytkownik zostaje przeniesiony do odpowiedniego trybu gry:
 		if (wcisniety(BUTTON_ENTER)) {
 			if (hot_button == 0) {
@@ -208,9 +210,9 @@ symuluj_gre(Input* input, float dt) {
 			pozycja_2_gracza = 0.f;
 			dpozycja_2_gracza = 0.f;
 
-			
+
 		}
-		
+
 		// zmieniamy kolor przycisków w zale¿noœci od tego, który wybraliœmy:
 		if (hot_button == 0) {
 
@@ -222,7 +224,7 @@ symuluj_gre(Input* input, float dt) {
 			rysuj_tekst("PLAY AGAIN", -80, -10, 1, 0xaaaaaa);
 			rysuj_tekst("EXIT TO MENU", 10, -10, 1, 0xff0000);
 		}
-		
+
 		// tytu³ ekranu, zale¿ny od tego, który gracz wygra³:
 		if (punkt_gracza_1 == 10) {
 			rysuj_tekst("PLAYER ONE WON", -63, 30, 1.5, 0xffffff);
@@ -231,11 +233,12 @@ symuluj_gre(Input* input, float dt) {
 			rysuj_tekst("PLAYER TWO WON", -63, 30, 1.5, 0xffffff);
 
 		}
-		
-	} else {			// MENU:
-		
-		// umo¿liwiamy wybór przycisku za pomoc¹ strza³ek, zmieniaj¹c wartoœæ "hot_button":
-		if (wcisniety(BUTTON_RIGHT)) {		 
+
+	}
+	else {			// MENU:
+
+	 // umo¿liwiamy wybór przycisku za pomoc¹ strza³ek, zmieniaj¹c wartoœæ "hot_button":
+		if (wcisniety(BUTTON_RIGHT)) {
 			hot_button++;
 			if (hot_button > 2)
 			{
@@ -264,7 +267,7 @@ symuluj_gre(Input* input, float dt) {
 				DestroyWindow(window);			// zamkniêcie programu
 			}
 		}
-		
+
 		// zmieniamy kolor przycisków w zale¿noœci od tego, który wybraliœmy:
 		if (hot_button == 0) {
 			rysuj_tekst("SINGLE PLAYER", -80, -10, 1, 0xff0000);
@@ -274,7 +277,7 @@ symuluj_gre(Input* input, float dt) {
 		else if (hot_button == 1) {
 			rysuj_tekst("SINGLE PLAYER", -80, -10, 1, 0xaaaaaa);
 			rysuj_tekst("MULTIPLAYER", 20, -10, 1, 0xff0000);
-			rysuj_tekst("EXIT PONG", -30, -30, 1, 0xaaaaaa); 
+			rysuj_tekst("EXIT PONG", -30, -30, 1, 0xaaaaaa);
 		}
 		else {
 			rysuj_tekst("SINGLE PLAYER", -80, -10, 1, 0xaaaaaa);

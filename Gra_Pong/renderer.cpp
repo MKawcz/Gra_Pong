@@ -1,16 +1,16 @@
 // PLIK OBS£UGUJ¥CY RENDEROWANIE OBIEKTÓW
 
-internal void 
+internal void
 render_background() {									// rysujemy t³o
 	unsigned int* piksel = (u32*)stan_render.pamiec;
 	for (int y = 0; y < stan_render.wysokosc; y++) {
 		for (int x = 0; x < stan_render.szerokosc; x++) {
-			*piksel++ = 0x0066ff*x;						// ustalamy kolor pikseli, dodajemy inkrementacjê, aby rysowaæ kolejne
+			*piksel++ = 0x0066ff * x;						// ustalamy kolor pikseli, dodajemy inkrementacjê, aby rysowaæ kolejne
 		}
 	}
 }
 
-internal void 
+internal void
 czysc_ekran(u32 color) {								// umo¿liwia czyszczenie ekranu
 	unsigned int* piksel = (u32*)stan_render.pamiec;
 	for (int y = 0; y < stan_render.wysokosc; y++) {
@@ -21,24 +21,24 @@ czysc_ekran(u32 color) {								// umo¿liwia czyszczenie ekranu
 }
 
 
-internal void 
+internal void
 rysuj_prostokat_w_pikselach(int x0, int y0, int x1, int y1, u32 color) {		// umo¿liwia rysowanie prostok¹tów renderuj¹c odpowiednie piksele
-	
-	x0 = zacisk(0, x0, stan_render.szerokosc);			// zacisk zwraca najwiêksz¹ wartoœæ z podanych jako argumenty, dziêki temu porgam siê nie zepsuje podczas zmiany rozmiaru okna
+
+	x0 = zacisk(0, x0, stan_render.szerokosc);			// zacisk zwraca najwiêksz¹ wartoœæ z podanych jako argumenty, dziêki temu progam siê nie zepsuje podczas zmiany rozmiaru okna
 	x1 = zacisk(0, x1, stan_render.szerokosc);			// (rozmiar prostok¹ta nie przekroczy dozwolonego rozmiaru)
 	y0 = zacisk(0, y0, stan_render.wysokosc);
 	y1 = zacisk(0, y1, stan_render.wysokosc);
 
-	
+
 	for (int y = y0; y < y1; y++) {
-		u32* piksel = (u32*)stan_render.pamiec + x0 + y*stan_render.szerokosc;
+		u32* piksel = (u32*)stan_render.pamiec + x0 + y * stan_render.szerokosc;
 		for (int x = x0; x < x1; x++) {
 			*piksel++ = color;
 		}
 	}
 }
 
-global_variable float skala_renderowania = 0.01f;		
+global_variable float skala_renderowania = 0.01f;
 
 // funkcja rysuj¹ca obramowanie areny s³u¿¹ce jako t³o:
 internal void
@@ -60,13 +60,13 @@ rysuj_obramowanie_areny(float arena_x, float arena_y, u32 color) {
 
 internal void
 rysuj_prostokat(float x, float y, float polowa_rozmiaru_x, float polowa_rozmiaru_y, u32 color) {			//u¿ywa poprzedniej funkcji, aby rysowaæ obiekty, które bêd¹ dostosowywaæ swój rozmiar do rozmiaru okna
-	
+
 	// zamieniamy piksele na rozmiar obiektu, np. jeœli rozmiar obiektu to 0.2, to zajmie 20% ekranu
-	x *= stan_render.wysokosc*skala_renderowania;		// dziêki temu, ¿e mno¿ymy przez wysokoœæ, to gdy u¿ytkownik zmieni szerokoœæ okna, rozmiar gracza siê nie zmieni, przy równoczesnym zwiêkszeniu pola widzenia
-	y *= stan_render.wysokosc*skala_renderowania;		// je¿eli jednak zmienimy wysokoœæ okna, obiekt gracza dostosuje siê
-	polowa_rozmiaru_x *= stan_render.wysokosc*skala_renderowania;
-	polowa_rozmiaru_y *= stan_render.wysokosc*skala_renderowania;
-	
+	x *= stan_render.wysokosc * skala_renderowania;		// dziêki temu, ¿e mno¿ymy przez wysokoœæ, to gdy u¿ytkownik zmieni szerokoœæ okna, rozmiar gracza siê nie zmieni, przy równoczesnym zwiêkszeniu pola widzenia
+	y *= stan_render.wysokosc * skala_renderowania;		// je¿eli jednak zmienimy wysokoœæ okna, obiekt gracza dostosuje siê
+	polowa_rozmiaru_x *= stan_render.wysokosc * skala_renderowania;
+	polowa_rozmiaru_y *= stan_render.wysokosc * skala_renderowania;
+
 	x += stan_render.szerokosc / 2.f;			// dodajemy po³owê szerkoœci i wyskoœci okna, dziêki czemu wartoœæ 0 podana w pozycji obiektu bêdzie oznacza³a œrodek (odpowiednio wysokoœci i szerokoœci)
 	y += stan_render.wysokosc / 2.f;
 
@@ -80,8 +80,8 @@ rysuj_prostokat(float x, float y, float polowa_rozmiaru_x, float polowa_rozmiaru
 	rysuj_prostokat_w_pikselach(x0, y0, x1, y1, color);
 }
 
-// tworzymy tabelê przechowuj¹c¹ mapê kafelkow¹ liter:
-const char* litery[][7] = {			
+// tworzymy tabelicê przechowuj¹c¹ mapê kafelkow¹ liter:
+const char* litery[][7] = {
 " 00",
 "0  0",
 "0  0",
@@ -309,12 +309,12 @@ const char* litery[][7] = {
 
 // funkcja rysuj¹ca tekst (w skrócie pracuje tak, ¿e dla ka¿dej litery przechodzi przez ka¿dy wiersz i jeœli napotka zero ma narysowaæ prostok¹t)
 internal void
-rysuj_tekst(const char *tekst, float x, float y, float rozmiar, u32 color) {
+rysuj_tekst(const char* tekst, float x, float y, float rozmiar, u32 color) {
 	float polowa_rozmiaru = rozmiar * .5f;
 	float oryginalny_y = y;
 
 	while (*tekst) {									// przechodzimy przez ka¿dy znak podanego tekstu
-		if (*tekst != 32) {								// 32 to odpowiednik spacji, jeœli napotkamy spacjê, pomijamy literê
+		if (*tekst != 32) {								// 32 to odpowiednik spacji wed³ug tabeli ASCII, jeœli napotkamy spacjê, pomijamy literê
 			const char** litera;
 			if (*tekst == 47) litera = litery[27];		// rysujemy slash
 			else if (*tekst == 46) litera = litery[26]; // rysujemy kropkê
@@ -342,14 +342,14 @@ rysuj_tekst(const char *tekst, float x, float y, float rozmiar, u32 color) {
 
 // funkcja rysuj¹ca liczby:
 internal void
-rysuj_liczby(int liczba, float x, float y, float rozmiar, u32 color) {			//funkcja umo¿liwiaj¹ca rysowaæ wynik graczy
+rysuj_liczby(int liczba, float x, float y, float rozmiar, u32 color) {			// funkcja umo¿liwiaj¹ca rysowaæ wynik graczy
 	float polowa_rozmiaru = rozmiar * .5f;										// x i y znajduj¹ siê w centrum narysowanej liczby
-																				
+
 	bool rysuj_liczby = false;
-	while (liczba || !rysuj_liczby) {	// wchodzimy do pêtli, gdy cyfr¹ nie jest zero, lub jeszcze nie narysowaliœmy ¿adnej liczby
+	while (liczba || !rysuj_liczby) {	// wykonuj dopuki cyfra nie jest równa zero, lub jeszcze nie narysowaliœmy ¿adnej liczby
 		rysuj_liczby = true;
-		int cyfra = liczba % 10;		//wyci¹gamy resztê z dzielenia przez 10 z podanej liczby, dziêki temu nie musimy rysowaæ oddzielnie np. 10, tylko narysujemy 1 i 0 obok siebie
-		liczba = liczba / 10;			//now¹ liczb¹ bêdzie liczba podzielona przez 10, dziêki temu na pocz¹tku bêdzie rysowana odpowiednia cyfra reprezentuj¹ca dziesi¹tki
+		int cyfra = liczba % 10;		// wyci¹gamy resztê z dzielenia przez 10 z podanej liczby, dziêki temu nie musimy rysowaæ oddzielnie np. 10, tylko narysujemy 1 i 0 obok siebie
+		liczba = liczba / 10;			// now¹ liczb¹ bêdzie liczba podzielona przez 10, dziêki temu na pocz¹tku bêdzie rysowana odpowiednia cyfra reprezentuj¹ca dziesi¹tki
 
 		switch (cyfra) {		// ka¿dy przypadek to rysowanie innej cyfry za pomoc¹ prostk¹tów
 		case 0: {
